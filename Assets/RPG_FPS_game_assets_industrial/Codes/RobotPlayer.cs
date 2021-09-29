@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RootMotion.FinalIK;
 
 public class RobotPlayer : BaseRobot
 {
@@ -9,10 +10,14 @@ public class RobotPlayer : BaseRobot
 
     private bool isGrounded;
 
+    public float range;
+
     public float maxLookAngle=40f;
 
     public Transform playBody;
     public Transform eye;
+
+    public Vector3 targetPos;
 
     public float VrotateOffset;
 
@@ -26,7 +31,6 @@ public class RobotPlayer : BaseRobot
         instance = this; 
     }
     public List<WeaponBase> Weapons;
-    public float WalkSpeed = 2;
     public float RotateSense = 30;
     private WeaponBase curWeapon;
     private Animator animator;
@@ -34,6 +38,12 @@ public class RobotPlayer : BaseRobot
     private CharacterController cc;
     public float jumpSpeed = 10f;
     public float speed = 1;
+
+    public AimIK aimIk;
+
+    private bool handAim=false;
+
+    
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -41,23 +51,112 @@ public class RobotPlayer : BaseRobot
         playBody=GetComponent<Transform>();
         eye = GameObject.Find("FollowCamera").GetComponent<Transform>();
         animator =GetComponent<Animator>();
+        aimIk = GetComponent<AimIK>();
+        aimIk.enabled=false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        SetTarget();
         freeLook();
         freeMove();
+        aim();
         fire();
     }
 
+    // void fire(){
+    //     bool fireClick = Input.GetButton("Fire1");
+
+    //     if(fireClick){
+    //         //有预瞄
+    //         if(handAim){
+    //             animator.SetFloat("aiming",1f);
+    //         //无预瞄
+    //         }else{
+    //             aimIk.enabled = true;
+    //             animator.SetBool("toShoot",true);
+    //             animator.SetFloat("aiming",1f);
+    //         }
+    //         aimIk.solver.target.position = targetPos;
+    //     }
+
+    //     if(!fireClick){
+    //         animator.SetFloat("aiming",0f);
+    //         if(handAim==false && animator.GetBool("toShoot")==true){
+    //             animator.SetBool("toShoot",false);
+    //             aimIk.enabled = false;
+    //         }
+    //     }
+    // }
     void fire(){
-        if(Input.GetButton("Fire1")){
-            // turnDirect(0);
-            animator.SetBool("shoot",true);
+        bool fireClick = Input.GetButton("Fire1");
+
+        if(fireClick){
+            //有预瞄
+            if(handAim){
+                animator.SetFloat("aiming",1.5f);
+            //无预瞄
+            }else{
+                aimIk.enabled = true;
+                // animator.SetBool("toShoot",true);
+                // animator.SetFloat("aiming",0f);
+                animator.SetFloat("aiming",1.5f);
+            }
+            aimIk.solver.target.position = targetPos;
         }
-        else
-            animator.SetBool("shoot",false);
+
+        if(!fireClick){
+            // animator.SetFloat("aiming",0f);
+            if(handAim==false && animator.GetFloat("aiming")>=0.5f){
+                // animator.SetBool("toShoot",false);
+                animator.SetFloat("aiming",0f);
+                aimIk.enabled = false;
+            }
+        }
+    }
+
+    // void aim(){
+    //     bool aimClick = Input.GetMouseButtonDown(1); 
+    //     // 预瞄
+    //     if(aimClick){
+    //         if(animator.GetBool("toShoot")==true){
+    //             aimIk.enabled = false; 
+    //             handAim = false;
+    //             animator.SetBool("toShoot",false);
+    //         }else{
+    //             aimIk.enabled = true;
+    //             handAim = true;
+    //             animator.SetBool("toShoot",true);
+    //         }
+    //         animator.SetFloat("aiming",0f);
+    //     }
+
+    //     if(handAim || animator.GetBool("toShoot")==true){
+    //         aimIk.enabled = true;
+    //         aimIk.solver.target.position = targetPos;
+    //     }
+    // }
+    void aim(){
+        bool aimClick = Input.GetMouseButtonDown(1); 
+        // 预瞄
+        if(aimClick){
+            if(animator.GetFloat("aiming")>=0.5f){
+                aimIk.enabled = false; 
+                handAim = false;
+                animator.SetFloat("aiming",0f);
+            }else{
+                aimIk.enabled = true;
+                handAim = true;
+                animator.SetFloat("aiming",0.5f);
+            }
+            // animator.SetFloat("aiming",0f);
+        }
+
+        if(handAim || animator.GetFloat("aiming")>=0.5f){
+            aimIk.enabled = true;
+            aimIk.solver.target.position = targetPos;
+        }
     }
 
     void freeLook(){
@@ -88,83 +187,6 @@ public class RobotPlayer : BaseRobot
             Velocity.y = -0.1f;
         }
 
-        // if(Input.GetButtonDown("Jump") && isGrounded)
-        // {
-        //     Debug.Log("Jumping");
-        //     // Velocity.y += -jumpSpeed * gravityValue*Time.deltaTime;
-        //     Velocity.y = Mathf.Sqrt(2*jumpSpeed * -gravityValue);
-        //     isGrounded = false;
-        //     animator.SetFloat("walkspeed",0f);
-        // }
-
-        // if(Input.GetAxis("Vertical")<=0 && isGrounded)
-        //     animator.SetFloat("walkspeed",0.66f);
-
-
-        // if(Input.GetAxis("Vertical")!=0 || Input.GetAxis("Horizontal")!=0){
-        // }
-
-
-        //     animator.SetFloat("walkspeed",speed);
-        // }
-        // else{
-        //     if(isGrounded){
-        //         if(Input.GetAxis("Vertical")>0 ){
-        //             // 前进
-        //             animator.SetBool("walkDirection",true);
-        //             if (Input.GetKey(KeyCode.LeftShift))
-        //                 speed = 1.5f;
-        //             else
-        //                 speed = 0.7f;
-        //             animator.SetFloat("walkspeed",speed);
-        //         }else if(Input.GetAxis("Vertical")<0){
-        //             // 后退
-        //             animator.SetBool("walkDirection",false);
-
-        //         }else{
-        //             //前进速度设为0
-        //             speed = 0;
-        //             // 后退速度设为0
-        //             animator.SetFloat("walkspeed",speed);
-        //         }
-
-        //         if(Input.GetAxis("Horizontal")>0){
-        //             // 右移
-        //             if (Input.GetKey(KeyCode.LeftShift))
-        //                 Velocity.x = 5f;
-        //             else
-        //                 Velocity.x = 1f;
-        //         }else if(Input.GetAxis("Horizontal")<0){
-        //             // 左移
-        //             if(Input.GetKey(KeyCode.LeftShift))
-        //                 Velocity.x = -5f;
-        //             else
-        //                 Velocity.x=-1f;
-        //         }else
-        //             Velocity.x=0f;
-
-        //         if(Input.GetButtonDown("Jump")){
-        //             if(Input.GetAxis("Vertical")>0){
-        //                 if(Input.GetAxis("Horizontal")>0){
-        //                     //前右跳
-        //                 }else if(Input.GetAxis("Horizontal")<0){
-        //                     //前左跳
-        //                 }else{
-        //                     //前跳
-        //                 }
-
-        //             }else if(Input.GetAxis("Vertical")<0){
-        //                 if(Input.GetAxis("Horizontal")>0){
-        //                     //后右跳
-        //                 }else if(Input.GetAxis("Horizontal")<0){
-        //                     //后左跳
-        //                 }else{
-        //                     //后跳
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
 
 
         // if(Input.GetAxis("Vertical")>0 && isGrounded && Input.GetKey(KeyCode.LeftShift))
@@ -180,9 +202,22 @@ public class RobotPlayer : BaseRobot
         //     animator.SetFloat("walkspeed",0.2f);
         //     Debug.Log("Horizontal move");
         // }
+
+        if(isGrounded){
+            float Horizontal = Input.GetAxis("Horizontal");
+            float Vertical  = Input.GetAxis("Vertical");
+            Debug.Log("Horizontal: "+Horizontal);
+            Debug.Log("Vertical: "+Vertical);
+            animator.SetFloat("Horizontal",Horizontal*2);
+            animator.SetFloat("Vertical",Vertical*2);
+            if(Input.GetButtonDown("Jump")){
+                animator.SetBool("Jump",true);
+            }
+        }
+
         
 
-        Vector3 moveDirection = new Vector3();
+        // Vector3 moveDirection = new Vector3();
 
         Velocity.y += gravityValue*Time.deltaTime;
 
@@ -190,52 +225,58 @@ public class RobotPlayer : BaseRobot
 
         // animator.SetFloat("walkspeed",1.5f);
 
-        if((Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))){
-            // animator.SetInteger("direction",0);
-            // animator.SetFloat("walkspeed",0f);
-            turnDirect(0);
-        }else{
-            if(Input.GetAxis("Vertical")>0){
-                if(Input.GetAxis("Horizontal")>0){
-                    // turnDirect(2);
-                    moveDirection.x = 8*Input.GetAxis("Horizontal");
-                }else if(Input.GetAxis("Horizontal")<0){
-                    // turnDirect(8);
-                    moveDirection.x = 8*Input.GetAxis("Horizontal");
-                }
-                turnDirect(1);
-                animator.SetFloat("walkspeed",1.5f);
-            }else if(Input.GetAxis("Vertical")<0){
-                if(Input.GetAxis("Horizontal")>0){
-                    // turnDirect(4);
-                    moveDirection.x = 8*Input.GetAxis("Horizontal");
-                }else if(Input.GetAxis("Horizontal")<0){
-                    // turnDirect(6);
-                    moveDirection.x = 8*Input.GetAxis("Horizontal");
-                }
-                turnDirect(3);
-                animator.SetFloat("walkspeed",1.5f);
-            }else if(Input.GetAxis("Horizontal")>0){
-                turnDirect(2);
-                animator.SetFloat("walkspeed",1.5f);
-            }else if(Input.GetAxis("Horizontal")<0){
-                turnDirect(4);     
-                animator.SetFloat("walkspeed",1.5f);
-            }else{
-                // animator.SetInteger("direction",0);
-                // animator.SetFloat("walkspeed",0f);
-                turnDirect(0);
-            }
-        }
+        // if((Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))){
+        //     // animator.SetInteger("direction",0);
+        //     // animator.SetFloat("walkspeed",0f);
+        //     turnDirect(0);
+        // }else{
+        //     if(Input.GetAxis("Vertical")>0){
+        //         if(Input.GetAxis("Horizontal")>0){
+        //             // turnDirect(2);
+        //             moveDirection.x = 8*Input.GetAxis("Horizontal");
+        //         }else if(Input.GetAxis("Horizontal")<0){
+        //             // turnDirect(8);
+        //             moveDirection.x = 8*Input.GetAxis("Horizontal");
+        //         }
+        //         turnDirect(1);
+        //         animator.SetFloat("walkspeed",1.5f);
+        //     }else if(Input.GetAxis("Vertical")<0){
+        //         if(Input.GetAxis("Horizontal")>0){
+        //             // turnDirect(4);
+        //             moveDirection.x = 8*Input.GetAxis("Horizontal");
+        //         }else if(Input.GetAxis("Horizontal")<0){
+        //             // turnDirect(6);
+        //             moveDirection.x = 8*Input.GetAxis("Horizontal");
+        //         }
+        //         turnDirect(3);
+        //         animator.SetFloat("walkspeed",1.5f);
+        //     }else if(Input.GetAxis("Horizontal")>0){
+        //         turnDirect(2);
+        //         animator.SetFloat("walkspeed",1.5f);
+        //     }else if(Input.GetAxis("Horizontal")<0){
+        //         turnDirect(4);     
+        //         animator.SetFloat("walkspeed",1.5f);
+        //     }else{
+        //         // animator.SetInteger("direction",0);
+        //         // animator.SetFloat("walkspeed",0f);
+        //         turnDirect(0);
+        //     }
+        // }
 
-        moveDirection = transform.TransformDirection(moveDirection);
+        // moveDirection = transform.TransformDirection(moveDirection);
         cc.Move(Velocity*Time.deltaTime);
-        cc.Move(moveDirection*Time.deltaTime);
+        // cc.Move(moveDirection*Time.deltaTime);
     }
 
-
-    private void OnAnimatorIK(int layerIndex) {
-        
+    public void SetTarget(){
+        RaycastHit hit;
+        if(Physics.Raycast(eye.transform.position,eye.transform.forward,out hit,range,7)){
+            targetPos=hit.point;
+        }
+        else{
+            targetPos = eye.transform.position+(eye.transform.forward*range);
+        }
+        Debug.DrawRay(eye.transform.position,eye.transform.forward*range,Color.green);
     }
 
     private void turnDirect(int direction){
