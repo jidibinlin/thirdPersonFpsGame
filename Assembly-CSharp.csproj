@@ -37,30 +37,17 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\BaseRobot.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\script\fpcharacter.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\DebrisScript.cs" />
      <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\EnemySight.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Casings_&amp;_Projectiles\GrenadeScript.cs" />
      <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\RobotPlayer.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\ExplosiveBarrelScript.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\TargetScript.cs" />
      <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\DropedItem.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Casings_&amp;_Projectiles\CasingScript.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Explosions_&amp;_Impacts\ExplosionScript.cs" />
      <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\idle.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Explosions_&amp;_Impacts\ImpactScript.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Weapon_Scripts\AutomaticGunScriptLPFP.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Bullet\BulletScript.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Scripts\FPSController\FpsControllerLPFP.cs" />
      <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\RobotEnemy.cs" />
+     <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\Example.cs" />
      <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\Bullet.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Misc\LookAtCamera.cs" />
-     <Compile Include="Assets\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Weapon_Scripts\HandgunScriptLPFP.cs" />
      <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\WeaponBase.cs" />
      <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\HUD.cs" />
-     <Compile Include="Assets\RPG_FPS_game_assets_industrial\Codes\Example.cs" />
-     <None Include="Assets\PolygonBattleRoyale\Materials\Shader\Particle VertexLit Blended_Backface.shader" />
-     <None Include="Assets\PolygonBattleRoyale\Materials\Shader\DamageZone.shader" />
+     <None Include="Assets\Rifle_27A2_Pro\Demo_Scene_Animation_README.txt" />
+     <None Include="Assets\Rifle_27A2_Pro\READ ME! - Rifle Attaches to RightHandMiddle1 Finger.txt" />
     <Reference Include="UnityEngine">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.17f1c1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -634,8 +621,14 @@
     <Reference Include="System.Xml.Serialization">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.17f1c1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
     </Reference>
+    <Reference Include="Cinemachine">
+        <HintPath>D:/lunwen/test/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VSCode.Editor">
         <HintPath>D:/lunwen/test/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+        <HintPath>D:/lunwen/test/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
         <HintPath>D:/lunwen/test/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
@@ -666,6 +659,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{03e530f1-b631-88cd-696b-20575b7f4cfa}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
