@@ -98,6 +98,11 @@ public class RobotPlayer : BaseRobot
                 animator.SetFloat("aiming", 0f);
                 aimIk.enabled = false;
             }
+
+            if(handAim == true && animator.GetFloat("aiming")>=0.5f){
+                animator.SetFloat("aiming",0.5f);
+                aimIk.solver.target.position = targetPos;
+            }
         }
     }
 
@@ -107,6 +112,7 @@ public class RobotPlayer : BaseRobot
         // 预瞄
         if (aimClick)
         {
+
             if (animator.GetFloat("aiming") >= 0.5f)
             {
                 aimIk.enabled = false;
@@ -159,8 +165,8 @@ public class RobotPlayer : BaseRobot
         {
             float Horizontal = Input.GetAxis("Horizontal");
             float Vertical = Input.GetAxis("Vertical");
-            Debug.Log("Horizontal: " + Horizontal);
-            Debug.Log("Vertical: " + Vertical);
+            // Debug.Log("Horizontal: " + Horizontal);
+            // Debug.Log("Vertical: " + Vertical);
             animator.SetFloat("Horizontal", Horizontal * 2);
             animator.SetFloat("Vertical", Vertical * 2);
             // if(Input.GetButtonDown("Jump")){
@@ -179,6 +185,7 @@ public class RobotPlayer : BaseRobot
         if (Physics.Raycast(eye.transform.position, eye.transform.forward, out hit, range, 7))
         {
             targetPos = hit.point;
+            // Debug.Log("targetPos: "+targetPos);
         }
         else
         {

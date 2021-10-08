@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "swi7kmyCYoBbE0W58u9Shq55HHNesiNeybentAV8yVt2AyjTNRmGZlbfjYZMPMpFzUiNqSXrdEKdq6K9PeZlDw==",
+  "success": true,
+  "projectFilePath": "/home/qibin/Documents/thirdPersonFpsGame/Assets/CsProto/CsProto.csproj",
+  "expectedPackageFiles": [
+    "/home/qibin/.nuget/packages/microsoft.aspnetcore.app.ref/5.0.0/microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
