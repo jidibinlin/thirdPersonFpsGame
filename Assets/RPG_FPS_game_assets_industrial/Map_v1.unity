@@ -9523,7 +9523,7 @@ MonoBehaviour:
   inputPlayerid: {fileID: 54022844}
   inputPassword: {fileID: 418127165}
   loginButton: {fileID: 1946070878}
-  enterScene: {fileID: 0}
+  enterScene: {fileID: 1516492038}
   playerid: 
 --- !u!1001 &784332286
 PrefabInstance:
